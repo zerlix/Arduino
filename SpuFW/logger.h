@@ -17,7 +17,9 @@ public:
 private:
   File _dataFile, _cfgFile;
   char _dataFileName[13] = "sdata_1.csv";
+  char _cfgFileName[13]  = "spu.ini";
   bool _openlogFile();
+  bool _read_CfgFile();
 
 };
 

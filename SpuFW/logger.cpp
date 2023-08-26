@@ -16,12 +16,18 @@ Logger::Logger() {}
   */
 bool Logger::init() {
   
+  _readCfgFile();
   // @todo:_dataFileName muss auf die aktuelle log datei zeigen
   if(_openlogFile() == false) {
     return false;
   }
   return true;
 
+}
+
+bool Logger::_readCfgFile() {
+  _cfgFile = SD.open(_cfgFileName, FILE_WRITE);
+  _cfgFile
 }
 
 // öffnet die logdatei
