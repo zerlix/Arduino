@@ -5,7 +5,7 @@
 // kommandos
 void free (int argc, char **argv); 
 void ls( int argc, char **argv );
-void del (int argc, char **argv);
+void delcfg(int argc, char **argv);
 
 // interne hilfsfunktionen
 void _printDirectory(File dir, int numTabs);
