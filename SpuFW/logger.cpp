@@ -11,11 +11,33 @@ Logger::Logger() {}
   *
   * char _dataFileName[13] = "sdata_1.csv";  // logger.h
   * 
-  * bool Logger::checkFileSize()
-  * bool Logger::createnewLogFile()
   */
 bool Logger::init() {
   
+  // SD Slot initialisieren
+  if (SD.begin(CS_PIN)) {
+    Serial.println("SD Slot ready...");
+  }
+  
+
+  // Versuchen cfgFileName zu öffnen
+  _cfgFile = SD.open(_cfgFileName, FILE_READ);
+  
+  // Falls es kein cfgFile auf der SD Card gibt...
+  if(!_cfgFile.available() ) {
+    // ... dann erstellen wir einen
+    Serial.println("Erstelle konfigurationsdatei");
+    _createCfgFile(); 
+    _cfgFile.close();
+  } else {
+    Serial.println("Lese konfiguration ein.");
+  }
+    
+
+  // cfgFile löschen nur für debugg
+  //SD.remove("logger.cfg");
+
+
   // @todo:_dataFileName muss auf die aktuelle log datei zeigen
   if(_openlogFile() == false) {
     return false;
@@ -26,17 +48,16 @@ bool Logger::init() {
 
 // öffnet die logdatei
 bool Logger::_openlogFile(){
-  if (SD.begin(CS_PIN)) {
-    _dataFile = SD.open(_dataFileName, FILE_WRITE);
+   
+  _dataFile = SD.open(_dataFileName, FILE_WRITE);
+  if(_dataFile) {
     _dataFile.close();
     return true;
+  } else {
+    return false;
   }
-  return false;
 }
-
   
-
-
 // schreibt zeile in datei
 bool Logger::writeLog(String sensorValue) {
   
@@ -65,4 +86,30 @@ bool Logger::checkFileSize() {
   }
   return true;
   }
+}
+
+
+/**
+ * wird nur aufgerufen wenn kein cfg file existiert.
+ */
+bool Logger::_createCfgFile() {
+ 
+  // cfg file öffnen
+  _cfgFile = SD.open(_cfgFileName, FILE_WRITE);
+  
+  // Hat das öffnen der Datei geklappt, schreiben wir 
+  // in die datei (_dataFileName:sdata_1.csv), 
+  // schliessen die datei und geben true zurück
+  if(_cfgFile) {
+    _cfgFile.println("_dataFileName:sdata_1.csv");
+    _cfgFile.close();
+    return true;
+  } else {
+    // Fehler ist aufgetreten
+    Serial.println("ERROR: Config File kann nicht erstellt werden !!");
+    Serial.flush();
+    return false; 
+  }
+ 
+  return false;  // Fehler ist aufgetreten
 }

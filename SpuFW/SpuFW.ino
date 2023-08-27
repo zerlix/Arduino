@@ -45,14 +45,14 @@ void loop() {
   // Serielle Eingabe holen und gegebenfalls Kommando ausführen.
   cmd.poll();
 
-  // csv formatierte sensordaten holen und in datei schreiben
+  // csv formatierte sensordaten holen.. 
   String csv = read_CSV_Sensor_Data();
-  //Serial.println(csv);
-  if (l.writeLog(csv) ) {
-    //Serial.println("ERROR: writing log...");
-  } else {
+  // ..und in datei schreiben
+  if (!l.writeLog(csv) ) {
     Serial.println("ERROR: writing log...");
-  }
+  } 
+
+  
   delay(500);
 
 }
