@@ -5,6 +5,7 @@
 // kommandos
 void free (int argc, char **argv); 
 void ls( int argc, char **argv );
+void del (int argc, char **argv);
 
 // interne hilfsfunktionen
 void _printDirectory(File dir, int numTabs);
@@ -39,6 +40,13 @@ void ls( int argc, char **argv ) {
   root.close();
 }
 
+void delcfg (int argc, char **argv) {
+  if(SD.remove("logger.cfg")){
+    Serial.println("datei wurde gelöscht");
+  } else {
+    Serial.println("kann datei nicht löschen");
+  }
+}
 
 /** void _printDirectory(File dir, int numTabs)
   * @param File Dir -- Verzeichnis das gelistet werden soll
@@ -74,7 +82,7 @@ void _printDirectory(File dir, int numTabs) {
       Serial.print("\t\t"); // Tabs für Formatierung
       Serial.println(entry.size(), DEC); // Grösse der Aktuellen Datei ausgeben 
     }
-    entry.close(); // Datei schliessen, ganz wichtig :D
+    entry.close(); // Datei schliessen
   }
 }
 

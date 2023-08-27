@@ -14,13 +14,10 @@ Logger::Logger() {}
   */
 bool Logger::init() {
   
-  // SD Slot initialisieren
-  if (SD.begin(CS_PIN)) {
-    Serial.println("SD Slot ready...");
-  }
+
   
 
-  // Versuchen cfgFileName zu öffnen
+  // Versuchen cfgFileName zu öffnen....
   _cfgFile = SD.open(_cfgFileName, FILE_READ);
   
   // Falls es kein cfgFile auf der SD Card gibt...
@@ -28,17 +25,14 @@ bool Logger::init() {
     // ... dann erstellen wir einen
     Serial.println("Erstelle konfigurationsdatei");
     _createCfgFile(); 
-    _cfgFile.close();
   } else {
     Serial.println("Lese konfiguration ein.");
   }
-    
+  // datei schliessen
+  _cfgFile.close(); 
 
-  // cfgFile löschen nur für debugg
-  //SD.remove("logger.cfg");
-
-
-  // @todo:_dataFileName muss auf die aktuelle log datei zeigen
+ 
+   // @todo:_dataFileName muss auf die aktuelle log datei zeigen
   if(_openlogFile() == false) {
     return false;
   }
@@ -107,9 +101,9 @@ bool Logger::_createCfgFile() {
   } else {
     // Fehler ist aufgetreten
     Serial.println("ERROR: Config File kann nicht erstellt werden !!");
-    Serial.flush();
-    return false; 
+    _cfgFile.close();
+    return false;  // Fehler ist aufgetreten
   }
- 
+   _cfgFile.close();
   return false;  // Fehler ist aufgetreten
 }

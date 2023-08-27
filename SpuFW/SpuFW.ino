@@ -16,6 +16,11 @@ Logger l;
 
 void setup() {
 
+    // SD Slot initialisieren
+  if (SD.begin(CS_PIN)) {
+    Serial.println("SD Slot ready...");
+  }
+
   // Initialisiere CLI (Command Line Interface)
   cmd.begin(9600);
 
@@ -25,12 +30,11 @@ void setup() {
   // Stelle CLI kommandos bereit.
   cmd.add("ls", ls);
   cmd.add("free", free);
+  cmd.add("delcfg", delcfg);
 
    // Logfile initialisieren 
   if ( l.init() == false ) {
-    Serial.println("ERROR: Kann SD Karte nicht finden.");
-  } else {
-    Serial.println("SD Karte bereit...");
+    Serial.println("ERROR Logger::init()");
   }
 
 }
