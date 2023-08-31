@@ -32,11 +32,21 @@ void setup() {
       sd.initErrorHalt();
     }
 
-    
+    // Inhaltsverzeicvhnis der SD Karte auf Serielle Konsole ausgeben
+    sd.ls(LS_SIZE|LS_R|LS_DATE);
+
+
     // Datei öffnen
     if (!file.open("SoftSPI.txt", O_RDWR | O_CREAT)) {
       sd.errorHalt(F("open failed"));
     }
+
+
+    // in Datei schreiben.
+    file.println("1,2,3 Test");
+    
+    // Position am anfang der datei setzen
+    file.rewind();
 
     // Datei ausgeben
     while (file.available()) {
@@ -45,6 +55,8 @@ void setup() {
 
     // Datei schliessen
     file.close();
+
+    //sd.remove("SoftSPI.txt");
 
 }
 
