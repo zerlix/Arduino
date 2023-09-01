@@ -1,5 +1,7 @@
 #include "logger.h"
 
+// C++ Template erstellt eine Klasse SoftSpiDriver
+SoftSpiDriver<SOFT_MISO_PIN, SOFT_MOSI_PIN, SOFT_SCK_PIN> softSpi; //Pin belegung vom SD Karten Slot 
 
 /**
  * Konstruktor Methode wird automatisch aufgerufen
@@ -20,7 +22,7 @@ Logger::Logger() {
  * \param[in] str zeile die in die datei geschrieben werden soll
  * \return true|false
  **/
-bool Logger::writelog(const char* str) {
+bool Logger::writeLog(const char* str) {
   // Öffne des Logfiles
   if (!logFile.open(logFile, O_RDWR | O_CREAT | O_APPEND)) {
     Serial.println(F("Logger:write() - Kann Datei nicht öffnen"));

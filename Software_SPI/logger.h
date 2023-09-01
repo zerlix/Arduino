@@ -1,5 +1,5 @@
-#ifndef logger_h
-#define logger_h
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <Arduino.h>
 #include <SPI.h>             
@@ -23,8 +23,6 @@ const uint8_t SD_CS_PIN = 10; // SD Karte
 // Chipselect Pin, für SD Karten Slot festlegen 
 #define SD_CS SdSpiConfig(SD_CS_PIN, DEDICATED_SPI, SD_SCK_MHZ(0), &softSpi) // Sd Karten Slot
 
-// C++ Template erstellt eine Klasse SoftSpiDriver
-SoftSpiDriver<SOFT_MISO_PIN, SOFT_MOSI_PIN, SOFT_SCK_PIN> softSpi; //Pin belegung vom SD Karten Slot 
 
 
 class Logger 
@@ -32,7 +30,7 @@ class Logger
 
 public:
   Logger();
-  bool writelog(const char* str);
+  bool writeLog(const char* str);
   
 private:
   SdFat sd;
