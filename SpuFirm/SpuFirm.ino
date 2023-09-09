@@ -1,49 +1,56 @@
 #include "logger.h"
 #include "shell.h"
-
-/**
-*** COPY-PASTE from Serial Terminal:
-const int TS_LANDSCAPE=1; //TouchScreen.h GFX Calibration
-const int TS_LEFT=936,TS_RT=182,TS_TOP=171,TS_BOT=941;
-
-PORTRAIT  CALIBRATION     240 x 320
-x = map(p.x, LEFT=936, RT=182, 0, 240)
-y = map(p.y, TOP=171, BOT=941, 0, 320)
-
-LANDSCAPE CALIBRATION     320 x 240
-x = map(p.y, LEFT=171, RT=941, 0, 320)
-y = map(p.x, TOP=182, BOT=936, 0, 240)
+#include <SPI.h>
+#include <SdFat.h>
 
 
-*** COPY-PASTE from Serial Terminal:
-const int TS_LANDSCAPE=1; //TouchScreen.h GFX Calibration
-const int TS_LEFT=174,TS_RT=932,TS_TOP=928,TS_BOT=170;
+// Software SPI muss in der Datei ..\Arduino\libraries\SdFat\src\SdFatConfig.h aktiviert werden
+// dazu muss SPI_DRIVER_SELECT auf 2 gesetzt werden.
+#if SPI_DRIVER_SELECT != 2
+#error SPI_DRIVER_SELECT != 2
+#endif
 
-PORTRAIT  CALIBRATION     240 x 320
-x = map(p.x, LEFT=174, RT=932, 0, 240)
-y = map(p.y, TOP=928, BOT=170, 0, 320)
+// SPI Pins (SD Card)
+const uint8_t SOFT_MISO_PIN = 12;
+const uint8_t SOFT_MOSI_PIN = 11;
+const uint8_t SOFT_SCK_PIN  = 13;
+// Chip select Pin (SD Card)
+const uint8_t SD_CS_PIN     = 10;  
 
-LANDSCAPE CALIBRATION     320 x 240
-x = map(p.y, LEFT=928, RT=170, 0, 320)
-y = map(p.x, TOP=932, BOT=174, 0, 240)
 
-**/
+// Chipselect Pin Macro für SD Karten Slot definieren
+#define SD_CS SdSpiConfig(SD_CS_PIN, DEDICATED_SPI, SD_SCK_MHZ(0), &softSpi)
 
-Logger l;
-Shell  s;
+// C++ Template, erstellt eine Klasse SoftSpiDriver
+SoftSpiDriver<SOFT_MISO_PIN, SOFT_MOSI_PIN, SOFT_SCK_PIN> softSpi; //Pin belegung  SD Karten Slot 
+
+
+SdFat sd;  // SD Karte  
+Shell  s;  // CLI / Shell 
+Logger l;  // logger
+
 
 
 void setup() {
 
+  // Initialisierung der seriellen Konsole
   Serial.begin(115200);
+  while (!Serial){;}
 
-  while (!Serial) {;}
+  // Initialisierung SD Karte
+  if (!sd.begin(SD_CS)) {
+    Serial.println(F("Kann SD Karte nicht ansprechen"));
+  }
+  l.writeLog("test");
 
 }
 
+
+
 void loop() {
 
+    // Falls verfügbar commando aus der Seriellen 
+    // Konsole lesen und ausführen
     s.getCommand();
-   
-    //Serial.println("1");
+
 }

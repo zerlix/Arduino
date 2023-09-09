@@ -6,45 +6,61 @@ Shell::Shell()
 }
 
 
+/**
+ * liest commando von seriellen console,
+ * speichert es in sBuffer und ruft _execCommand() auf
+ */
 bool Shell::getCommand()
 {
 
   if(Serial.available() > 0) {
     sBuffer =  Serial.readStringUntil('\n');
-    Serial.println(sBuffer);
-    execCommand();
+    _execCommand();
   }
-
-  
   return true;
 }
 
 
-
-bool Shell::execCommand()
+/**
+ * führt Methode entsprechend des sBuffer aus  
+ **/
+bool Shell::_execCommand()
 {
+  Serial.print("# ");
+  Serial.println(sBuffer);
+
   if(sBuffer.equals("free")) {
     _free();
+    return;
+  }
+  else if (sBuffer.equals("help")) {
+    _help();
+    return;
   } 
   else if (sBuffer.equals("ls")) {
     _ls();
+    return;
   } 
   else {
+    Serial.println("> Error: unbekannter Befehl.");
     _help();
+    return;
   }
 }
 
 
-
+/**
+ * "help" zeigt verfügbare Kommandos an
+ */
 void Shell::_help()
 {
-  Serial.println(F("Verfügbare Kommandos:"));
-  Serial.println(F("free"));
-  Serial.println(F("ls"));
+  Serial.println(F("> Verfügbare Kommandos: free, ls, help"));
 }
 
 
-
+/** 
+ * Kommando "free" gibt den freiem dynamischem Speicher (Heap) auf der Seriellen Konsole aus
+ */
 void Shell::_free()
 {
   extern int __heap_start, *__brkval;
@@ -54,8 +70,10 @@ void Shell::_free()
   Serial.println(" Bytes free");
 }
 
-
+/**
+ * "ls" listet das Inhaltsverzeichnis der SD Karte auf
+ */
 void Shell::_ls()
 {
-  int i = 0;
+  sd.ls(LS_R);
 }

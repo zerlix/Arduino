@@ -1,24 +1,29 @@
 #ifndef SHELL_H
 #define SHELL_H
 #include <Arduino.h>
+#include <SPI.h>
+#include <SdFat.h>
 
-#define BUFFER_SIZE 64
+extern SdFat sd;   
 
+/**
+ * @class Shell
+ * einfache Shell.
+ **/
 class Shell
 {
 
   public:
-    Shell::Shell();
-    bool Shell::getCommand();
+    Shell::Shell();  // 
+    bool Shell::getCommand(); // überprüft Serielle konsole auf eingabe
     
   private:
-    String sBuffer;
-    int bSize = 0;
+    String sBuffer; // Buffer für input
 
-    bool Shell::execCommand();
-    void Shell::_help();
-    void Shell::_free();
-    void Shell::_ls();
+    bool Shell::_execCommand(); // führt commando (sBuffer) aus
+    void Shell::_help(); // commando help
+    void Shell::_free(); // commando free
+    void Shell::_ls();  // commando ls
     
 };
 #endif

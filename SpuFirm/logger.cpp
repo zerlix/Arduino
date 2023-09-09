@@ -1,21 +1,13 @@
 #include "logger.h"
 
 
-// C++ Template, erstellt eine Klasse SoftSpiDriver
-SoftSpiDriver<SOFT_MISO_PIN, SOFT_MOSI_PIN, SOFT_SCK_PIN> softSpi; //Pin belegung vom SD Karten Slot 
-
-
-
 /**
  * Konstruktor Methode wird automatisch aufgerufen
  * wenn ein Object von der Klasse "Logger" erstellt wird
  **/
-Logger::Logger() {
+Logger::Logger() 
+{
 
-  // Initialisierung SD Karte
-  if (!sd.begin(SD_CS)) {
-    Serial.println("Logger::Logger() - Kann SD Karte nicht ansprechen");
-  }
 }
 
 
