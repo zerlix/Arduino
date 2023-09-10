@@ -1,10 +1,6 @@
 #ifndef BUTTON_H
 #define BUTTON_H
-//#include "../gui.h"
 
-//extern MCUFRIEND_kbv tft;
-//extern void printText(int xOffset, int yOffset, char* text, int textSize=3); 
-//extern void printValue(const char* value, int rowIndex, bool marked, const char* unit);
 
 // ABFRAGEBUTTON
 class Button{

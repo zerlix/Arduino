@@ -19,29 +19,34 @@ const int TS_LEFT=181,TS_RT=914,TS_TOP=978,TS_BOT=203;
 
 extern MCUFRIEND_kbv tft;
 
+// Views
 enum views{
   MENUVIEW,
   STANDBYVIEW
 };
 
-void printText(int xOffset, int yOffset, char* text, int textSize=3);
-void printValue(const char* value, int rowIndex, bool marked, const char* unit);
-
-#include "views/button.h"
-
-
 // ZEILENABSTAND FÜR DIE MESSWERTANZEIGE IM STANDBYMODUS FESTLEGEN
 int STANDBYVIEW_YOFFSET = 20;
-
 
 // VORBELEGUNG VON WERTEN FÜR DIE BILDSCHIRMANSICHT
 bool viewChanged = true;
 int currentView = STANDBYVIEW;
 
 
+// deklaration von hilfsfunktionen
+void printText(int xOffset, int yOffset, char* text, int textSize=3);
+void printValue(const char* value, int rowIndex, bool marked, const char* unit);
+
+
+// Views includieren
+#include "Button.h"
+#include "StandbyView.h"
+
+
 
 // TEXTAUSGABE
-void printText(int xOffset, int yOffset, char* text, int textSize=3){
+void printText(int xOffset, int yOffset, char* text, int textSize=3)
+{
     tft.setTextColor(WHITE);
     tft.setTextSize(textSize);
     tft.setCursor(xOffset, yOffset);
@@ -50,18 +55,21 @@ void printText(int xOffset, int yOffset, char* text, int textSize=3){
 
 
 // WERTEAUSGABE
-void printValue(const char* value, int rowIndex, bool marked, const char* unit){
+void printValue(const char* value, int rowIndex, bool marked, const char* unit)
+{
 
       int xOffset = 120;
       int yOffset = STANDBYVIEW_YOFFSET+rowIndex*30;
       int xOffsetUnit = 260;
       int yOffsetUnit = STANDBYVIEW_YOFFSET + 6+rowIndex*30;
       
-      if(marked) tft.fillRect(xOffset, yOffset, 130, 21, RED);   
+      if(marked) 
+        tft.fillRect(xOffset, yOffset, 130, 21, RED);   
 
       printText(xOffset, yOffset, value);
       
-      if(unit=="") return;
+      if(unit=="") 
+        return;
 
       printText(xOffsetUnit, yOffsetUnit, unit, 2);
 }
