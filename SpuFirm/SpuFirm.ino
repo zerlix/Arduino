@@ -1,5 +1,6 @@
-#include "logger.h"
 #include "shell.h"
+#include "logger.h"
+#include "gui.h"
 #include <SPI.h>
 #include <SdFat.h>
 
@@ -24,12 +25,12 @@ const uint8_t SD_CS_PIN     = 10;
 // C++ Template, erstellt eine Klasse SoftSpiDriver
 SoftSpiDriver<SOFT_MISO_PIN, SOFT_MOSI_PIN, SOFT_SCK_PIN> softSpi; //Pin belegung  SD Karten Slot 
 
+MCUFRIEND_kbv tft; // Display
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300); // Touchscreen  
 
 SdFat sd;  // SD Karte  
 Shell  s;  // CLI / Shell 
 Logger l;  // logger
-
-
 
 void setup() {
 
@@ -42,6 +43,9 @@ void setup() {
     Serial.println(F("Kann SD Karte nicht ansprechen"));
   }
   l.writeLog("test");
+
+  tft.begin(tft.readID()); 
+  tft.setRotation(3); 
 
 }
 
