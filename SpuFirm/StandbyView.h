@@ -1,6 +1,9 @@
 #ifndef STANDBYVIEW_H
 #define STANDBYVIEW_H
 
+#include "gui.h"
+
+
 // STANDBYMODUS
 class StandbyView{
   private:
@@ -11,7 +14,7 @@ class StandbyView{
     double prevTemperature = 0;
     double prevAmbientPressure = 0;
     Button* menuButton;
-
+    
   public:
     StandbyView(){
         menuButton = new Button(65, 200, 185, 40, "   MENU");
@@ -100,6 +103,6 @@ class StandbyView{
       }
     }
 };
-StandbyView* standbyView;
+StandbyView* standbyView; 
 
 #endif

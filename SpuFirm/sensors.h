@@ -47,6 +47,7 @@ double getWaterVolume(){
     return waterVolume;
 }
 
+
 // DRUCKMESSWERTE SKALIEREN
 double scaleOffset(double value, double scale, double offset){
   return (value-offset)/scale;

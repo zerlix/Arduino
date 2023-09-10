@@ -14,10 +14,17 @@
 #define YELLOW  0xFFE0
 #define WHITE   0xFFFF
 
+#define TS_MINX 130
+#define TS_MINY 110
+#define TS_MAXX 950
+#define TS_MAXY 930
+
+
 const int XP=6,XM=A2,YP=A1,YM=7;
 const int TS_LEFT=181,TS_RT=914,TS_TOP=978,TS_BOT=203;
 
 extern MCUFRIEND_kbv tft;
+
 
 // Views
 enum views{
@@ -41,6 +48,8 @@ void printValue(const char* value, int rowIndex, bool marked, const char* unit);
 // Views includieren
 #include "Button.h"
 #include "StandbyView.h"
+#include "MenuView.h"
+
 
 
 
