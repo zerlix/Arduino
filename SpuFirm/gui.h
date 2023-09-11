@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <TouchScreen.h>
 #include <MCUFRIEND_kbv.h>
+#include <Streaming.h>
 
 //FARBDEFINITIONEN
 #define BLACK   0x0000
@@ -18,13 +19,15 @@
 #define TS_MINY 110
 #define TS_MAXX 950
 #define TS_MAXY 930
-
+#define MINPRESSURE 200
+#define MAXPRESSURE 1000
 
 const int XP=6,XM=A2,YP=A1,YM=7;
 const int TS_LEFT=181,TS_RT=914,TS_TOP=978,TS_BOT=203;
 
 extern MCUFRIEND_kbv tft;
-
+extern TouchScreen ts; // = TouchScreen(XP, YP, XM, YM, 300);
+extern TSPoint pressPointTft;
 
 // Views
 enum views{
@@ -81,6 +84,34 @@ void printValue(const char* value, int rowIndex, bool marked, const char* unit)
         return;
 
       printText(xOffsetUnit, yOffsetUnit, unit, 2);
+}
+
+void getXY(void) {
+ 
+  pressPointTft = ts.getPoint();
+  
+  pinMode(YP, OUTPUT);  //restore shared pins
+  pinMode(XM, OUTPUT);
+  digitalWrite(YP, HIGH);  //because TFT control pins
+  digitalWrite(XM, HIGH);
+
+    ////ÜBERPRÜFEN OB DRUCKKRAFT GRÖSSER ALS 0 WAR UND FALLS JA:
+  if (pressPointTft.z > 200) {
+
+    //UMRECHNEN DER DRUCKPUNKTKOORDINATEN AUF DAS DISPLAYFORMAT
+    pressPointTft.x = map(pressPointTft.x, TS_MAXX, TS_MINX, 0, 320);
+    pressPointTft.y = map(pressPointTft.y, TS_MAXY, TS_MINY, 0, 240);
+    pressPointTft.y = 240-pressPointTft.y; // flip y axis orientation
+
+  }
+
+  /**
+  pressPointTft.x= map(pressPointTft.y, TS_LEFT, TS_RT, 0, 320);
+  pressPointTft.y = map(pressPointTft.x, TS_BOT, TS_TOP, 0, 240);
+  **/
+  //Serial << pressPointTft.x << "," << pressPointTft.y << "," << pressPointTft.z << endl;
+  
+
 }
 
 #endif

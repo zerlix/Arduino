@@ -1,10 +1,14 @@
+#include <Arduino.h>
+#include <Streaming.h>
+#include <SPI.h>
+#include <SdFat.h>
+#include <Adafruit_BMP085.h>
+#include <TouchScreen.h>
+#include <MCUFRIEND_kbv.h>
 #include "shell.h"
 #include "logger.h"
 #include "gui.h"
 #include "sensors.h"
-#include <SPI.h>
-#include <SdFat.h>
-#include <Adafruit_BMP085.h>
 
 
 // Software SPI muss in der Datei ..\Arduino\libraries\SdFat\src\SdFatConfig.h aktiviert werden
@@ -28,15 +32,13 @@ const uint8_t SD_CS_PIN     = 10;
 SoftSpiDriver<SOFT_MISO_PIN, SOFT_MOSI_PIN, SOFT_SCK_PIN> softSpi; //Pin belegung  SD Karten Slot 
 
 MCUFRIEND_kbv tft; // Display
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300); // Touchscreen  
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300); // Touchscreen
+TSPoint pressPointTft;
 
 SdFat sd;  // SD Karte  
 Shell  s;  // CLI / Shell 
 Logger l;  // logger
 Adafruit_BMP085 bmp; //bmp Sensor
-
-
-
 
 
 void setup() {
@@ -54,6 +56,7 @@ void setup() {
     Serial.println(F("Kann SD Karte nicht ansprechen"));
   }
   
+  // init Display
   tft.begin(tft.readID()); 
   tft.setRotation(3);
 
@@ -71,33 +74,9 @@ void loop() {
   // Konsole lesen und ausführen
   s.getCommand();
 
-  TSPoint pressPointTft = ts.getPoint();  //Get touch point
-  pinMode(XM, OUTPUT);
-  pinMode(YP, OUTPUT);
-  digitalWrite(YP, HIGH);  //because TFT control pins
-  digitalWrite(XM, HIGH);
+  // Lese x/y Koordinaten, falls auf das touchpad geklickt wurde
+  getXY();
   
-  ////ÜBERPRÜFEN OB DRUCKKRAFT GRÖSSER ALS 0 WAR UND FALLS JA:
-  if (pressPointTft.z > 200) {
-
-    Serial.print(pressPointTft.x);
-    Serial.print("/");
-    Serial.println(pressPointTft.y);
-
-    //UMRECHNEN DER DRUCKPUNKTKOORDINATEN AUF DAS DISPLAYFORMAT
-    
-    //pressPointTft.x = map(pressPointTft.x, TS_MAXX, TS_MINX, 0, 320);
-    //pressPointTft.y = map(pressPointTft.y, TS_MAXY, TS_MINY, 0, 240);
-    //pressPointTft.y = 240-pressPointTft.y; // flip y axis orientation
-
-    pressPointTft.x  = map(pressPointTft.x, 974, 218, 0, 320);
-    pressPointTft.y  = map(pressPointTft.y, 904, 179, 0, 240);
-    pressPointTft.y = 240-pressPointTft.y; // flip y axis orientation
-
-
-    
-
-  }
   //ABFRAGE SENSOREN
   double waterVolume= getWaterVolume();
   
@@ -115,6 +94,7 @@ void loop() {
   double ambientPressure = bmp.readPressure()/100; 
   double ambientTemperature = bmp.readTemperature();
   **/
+
   double ambientPressure = 100; 
   double ambientTemperature = 30;
   

@@ -39,12 +39,17 @@ int SENSOR_PIN_VOLUME_WATER = 35;  // Festlegung von Pin 35 als Digital-Input-Pi
 * @return ausgelesenes Wasser Volumen
 */
 double getWaterVolume(){
-   int impulseCounter = 0;
-    unsigned long startTime = micros();
-    do{ if(pulseIn(SENSOR_PIN_VOLUME_WATER, HIGH, TIMEOUT_WATER) > 0) impulseCounter++;}
-    while( micros() < (startTime + DURATION_WATER_SENSOR));
-    double waterVolume = impulseCounter * 1e6/DURATION_WATER_SENSOR * (60.0/ScaleVol);
-    return waterVolume;
+  int impulseCounter = 0;
+  unsigned long startTime = micros();
+  
+  do{ 
+    if(pulseIn(SENSOR_PIN_VOLUME_WATER, HIGH, TIMEOUT_WATER) > 0) 
+       impulseCounter++;
+  }while( micros() < (startTime + DURATION_WATER_SENSOR));
+  
+  double waterVolume = impulseCounter * 1e6/DURATION_WATER_SENSOR * (60.0/ScaleVol);
+  
+  return waterVolume;
 }
 
 
