@@ -77,28 +77,11 @@ void loop() {
   // Lese x/y Koordinaten, falls auf das touchpad geklickt wurde
   getXY();
   
-  //ABFRAGE SENSOREN
-  double waterVolume= getWaterVolume();
+  // liest die aktuellen Sensordaten 
+  getSensorData();
   
-  SensorValueWa = analogRead(SensorPinWa);    //Abfrage Drucksensor Wasser
-  SensorValueL1 = analogRead(SensorPinL1);    //Abfrage Drucksensor Luft 1
-  SensorValueL2 = analogRead(SensorPinL2);    //Abfrage Drucksensor Luft 2
-  
-  // Auswertung
-  double waterPressure = scaleOffset(SensorValueWa, ScaleWa, OffsetWa);
-  double air1Pressure = scaleOffset(SensorValueL1, ScaleL1/1000, 0);
-  double air2Pressure = scaleOffset(SensorValueL2, ScaleL2/1000, 0);
-  
-  
-  /** Blockiert die Ausführung wenn Sensor nicht angesprochen werden kann
-  double ambientPressure = bmp.readPressure()/100; 
-  double ambientTemperature = bmp.readTemperature();
-  **/
 
-  double ambientPressure = 100; 
-  double ambientTemperature = 30;
-  
-  
+  // Welcher View soll angezeigt werden  
   switch(currentView){
     case STANDBYVIEW:
       if(viewChanged) {

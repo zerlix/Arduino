@@ -1,11 +1,13 @@
 #include "shell.h"
 
 
+
 Shell::Shell()
 {
 }
 
 
+ 
 /**
  * liest commando von seriellen console,
  * speichert es in sBuffer und ruft _execCommand() auf
@@ -19,6 +21,7 @@ bool Shell::getCommand()
   }
   return true;
 }
+
 
 
 /**
@@ -49,6 +52,7 @@ bool Shell::_execCommand()
 }
 
 
+
 /**
  * "help" zeigt verfügbare Kommandos an
  */
@@ -56,6 +60,7 @@ void Shell::_help()
 {
   Serial.println(F("> Verfügbare Kommandos: free, ls, help"));
 }
+
 
 
 /** 
@@ -69,6 +74,8 @@ void Shell::_free()
   Serial.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
   Serial.println(" Bytes free");
 }
+
+
 
 /**
  * "ls" listet das Inhaltsverzeichnis der SD Karte auf

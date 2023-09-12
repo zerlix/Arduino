@@ -27,6 +27,12 @@ int lastSensorValueL2 = 0L;  // Vorbelegung der Variablen lastSensorValueL2 mit 
 
 int SENSOR_PIN_VOLUME_WATER = 35;  // Festlegung von Pin 35 als Digital-Input-Pin für die Durchflussmessung Wasser
 
+double waterVolume;
+double waterPressure;
+double air1Pressure;
+double air2Pressure;
+double ambientPressure = 100; 
+double ambientTemperature = 30;
 
 
 // VOLUMENZÄHLER WASSER EINLESEN
@@ -38,7 +44,8 @@ int SENSOR_PIN_VOLUME_WATER = 35;  // Festlegung von Pin 35 als Digital-Input-Pi
 * Berechnung des Volumenstroms A
 * @return ausgelesenes Wasser Volumen
 */
-double getWaterVolume(){
+double getWaterVolume()
+{
   int impulseCounter = 0;
   unsigned long startTime = micros();
   
@@ -53,9 +60,38 @@ double getWaterVolume(){
 }
 
 
+
 // DRUCKMESSWERTE SKALIEREN
-double scaleOffset(double value, double scale, double offset){
+double scaleOffset(double value, double scale, double offset)
+{
   return (value-offset)/scale;
 }
+
+
+
+void getSensorData()
+{ 
+    //ABFRAGE SENSOREN
+  waterVolume= getWaterVolume();
+  
+  SensorValueWa = analogRead(SensorPinWa);    //Abfrage Drucksensor Wasser
+  SensorValueL1 = analogRead(SensorPinL1);    //Abfrage Drucksensor Luft 1
+  SensorValueL2 = analogRead(SensorPinL2);    //Abfrage Drucksensor Luft 2
+  
+  // Auswertung
+  waterPressure = scaleOffset(SensorValueWa, ScaleWa, OffsetWa);
+  air1Pressure = scaleOffset(SensorValueL1, ScaleL1/1000, 0);
+  air2Pressure = scaleOffset(SensorValueL2, ScaleL2/1000, 0);
+  
+  
+  /** Blockiert die Ausführung wenn Sensor nicht angesprochen werden kann
+  double ambientPressure = bmp.readPressure()/100; 
+  double ambientTemperature = bmp.readTemperature();
+  **/
+  ambientPressure = 100; 
+  ambientTemperature = 30;
+
+}
+
 
 #endif
