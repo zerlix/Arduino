@@ -1,5 +1,7 @@
+#include <stdio.h>
 #ifndef SENSORS_H
 #define SENSORS_H
+
 
 //EINFÜHREN UND VORBELEGEN VON VARIABLEN FÜR DIE SKALIERUNGSFAKTOREN DER SENSOREN
 double ScaleVol = 11700.0;         // Einführung der Variablen ScaleVol vom Typ double für Skalierung des Durchflussmessers
@@ -27,11 +29,12 @@ int lastSensorValueL2 = 0L;  // Vorbelegung der Variablen lastSensorValueL2 mit 
 
 int SENSOR_PIN_VOLUME_WATER = 35;  // Festlegung von Pin 35 als Digital-Input-Pin für die Durchflussmessung Wasser
 
+
 double waterVolume;
 double waterPressure;
 double air1Pressure;
 double air2Pressure;
-double ambientPressure = 100; 
+double ambientPressure = 100;
 double ambientTemperature = 30;
 
 
@@ -44,54 +47,63 @@ double ambientTemperature = 30;
 * Berechnung des Volumenstroms A
 * @return ausgelesenes Wasser Volumen
 */
-double getWaterVolume()
-{
+double getWaterVolume() {
   int impulseCounter = 0;
   unsigned long startTime = micros();
-  
-  do{ 
-    if(pulseIn(SENSOR_PIN_VOLUME_WATER, HIGH, TIMEOUT_WATER) > 0) 
-       impulseCounter++;
-  }while( micros() < (startTime + DURATION_WATER_SENSOR));
-  
-  double waterVolume = impulseCounter * 1e6/DURATION_WATER_SENSOR * (60.0/ScaleVol);
-  
+
+  do {
+    if (pulseIn(SENSOR_PIN_VOLUME_WATER, HIGH, TIMEOUT_WATER) > 0)
+      impulseCounter++;
+  } while (micros() < (startTime + DURATION_WATER_SENSOR));
+
+  waterVolume = impulseCounter * 1e6 / DURATION_WATER_SENSOR * (60.0 / ScaleVol);
+
   return waterVolume;
 }
 
 
 
 // DRUCKMESSWERTE SKALIEREN
-double scaleOffset(double value, double scale, double offset)
-{
-  return (value-offset)/scale;
+double scaleOffset(double value, double scale, double offset) {
+  return (value - offset) / scale;
 }
 
 
 
-void getSensorData()
-{ 
-    //ABFRAGE SENSOREN
-  waterVolume= getWaterVolume();
-  
-  SensorValueWa = analogRead(SensorPinWa);    //Abfrage Drucksensor Wasser
-  SensorValueL1 = analogRead(SensorPinL1);    //Abfrage Drucksensor Luft 1
-  SensorValueL2 = analogRead(SensorPinL2);    //Abfrage Drucksensor Luft 2
-  
+void getSensorData() {
+
+  //ABFRAGE SENSOREN
+  waterVolume = getWaterVolume();
+  SensorValueWa = analogRead(SensorPinWa);  //Abfrage Drucksensor Wasser
+  SensorValueL1 = analogRead(SensorPinL1);  //Abfrage Drucksensor Luft 1
+  SensorValueL2 = analogRead(SensorPinL2);  //Abfrage Drucksensor Luft 2
+
   // Auswertung
   waterPressure = scaleOffset(SensorValueWa, ScaleWa, OffsetWa);
-  air1Pressure = scaleOffset(SensorValueL1, ScaleL1/1000, 0);
-  air2Pressure = scaleOffset(SensorValueL2, ScaleL2/1000, 0);
-  
-  
+  air1Pressure = scaleOffset(SensorValueL1, ScaleL1 / 1000, 0);
+  air2Pressure = scaleOffset(SensorValueL2, ScaleL2 / 1000, 0);
+
+
+
+  /************** ACHTUNG ***********************/
   /** Blockiert die Ausführung wenn Sensor nicht angesprochen werden kann
-  double ambientPressure = bmp.readPressure()/100; 
-  double ambientTemperature = bmp.readTemperature();
+  ambientPressure = bmp.readPressure()/100; 
+  ambientTemperature = bmp.readTemperature();
   **/
-  ambientPressure = 100; 
-  ambientTemperature = 30;
+
+  // Rundungsfehler bei Gleitkommazahlen.
+  // mögliche Lösung: https://www.arduino.cc/reference/en/libraries/fp64lib/
+  ambientPressure = 100.00;
+  ambientTemperature = 30.00;
 
 }
 
+// Gibt eine zeile csv formatierte Sensordaten zurück
+char* getCsvSensorData()
+{
+  char buffer[64];
+  sprintf(buffer,"%d,%d,%d,%d,%d,%d",waterVolume, waterPressure,air1Pressure, air2Pressure, ambientPressure, ambientTemperature);
+  return buffer;
+}
 
 #endif

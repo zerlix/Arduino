@@ -79,6 +79,11 @@ void loop() {
   
   // liest die aktuellen Sensordaten 
   getSensorData();
+
+  // Schreibe Sensordaten ins Logfile
+  if(! l.writeLog(getCsvSensorData())) {
+    Serial.println("Error:");
+  }
   
 
   // Welcher View soll angezeigt werden  
