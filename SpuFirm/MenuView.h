@@ -32,14 +32,18 @@ class MenuView{
         standbyView->display();
       }
       else if(kalibrierungButton->isPressedBy(p->x, p->y)){
-          //TODO change view to Kalibrierung
+        viewChanged = true;
+        currentView = KALIBRIERUNGSVIEW;
+        protokollView->display(); 
       }
       else if(protokollausgabeButton->isPressedBy(p->x, p->y)){
-          //TODO change view to Protokollausgabe
+        viewChanged = true;
+        currentView = PROTOKOLLVIEW;
+        protokollView->display();  
       }
     }
 
-  };
+  }
 };
 MenuView* menuView;
 

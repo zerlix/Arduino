@@ -22,8 +22,27 @@
 #define MINPRESSURE 200
 #define MAXPRESSURE 1000
 
-const int XP=6,XM=A2,YP=A1,YM=7;
-const int TS_LEFT=181,TS_RT=914,TS_TOP=978,TS_BOT=203;
+//PINBELEGUNG FÜR DAS DISPLAY FESTLEGEN
+#define LCD_CS A3
+#define LCD_CD A2
+#define LCD_WR A1
+#define LCD_RD A0
+#define LCD_RESET A4
+
+//PINBELEGUNG FÜR DEN TOUCHSCREEN FESTLEGEN
+#define YP A2
+#define XM A3
+#define YM 8
+#define XP 9
+
+//X- UND Y-GRENZEN FÜR DEN TOUCHSCREEN FESTLEGEN
+#define TS_MINX 130
+#define TS_MINY 110
+#define TS_MAXX 950
+#define TS_MAXY 930
+
+//const int XP=6,XM=A2,YP=A1,YM=7;
+//const int TS_LEFT=181,TS_RT=914,TS_TOP=978,TS_BOT=203;
 
 extern MCUFRIEND_kbv tft;
 extern TouchScreen ts; // = TouchScreen(XP, YP, XM, YM, 300);
@@ -32,7 +51,9 @@ extern TSPoint pressPointTft;
 // Views
 enum views{
   MENUVIEW,
-  STANDBYVIEW
+  STANDBYVIEW,
+  PROTOKOLLVIEW,
+  KALIBRIERUNGSVIEW
 };
 
 // ZEILENABSTAND FÜR DIE MESSWERTANZEIGE IM STANDBYMODUS FESTLEGEN
@@ -50,8 +71,11 @@ void printValue(const char* value, int rowIndex, bool marked, const char* unit);
 
 // Views includieren
 #include "Button.h"
+#include "ProtokollView.h"
+#include "KalibrierungsView.h"
 #include "StandbyView.h"
 #include "MenuView.h"
+
 
 
 

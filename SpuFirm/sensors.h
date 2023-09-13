@@ -91,19 +91,29 @@ void getSensorData() {
   ambientTemperature = bmp.readTemperature();
   **/
 
-  // Rundungsfehler bei Gleitkommazahlen.
+  // Rundungsfehler bei Gleitkommazahlen ?
   // mögliche Lösung: https://www.arduino.cc/reference/en/libraries/fp64lib/
   ambientPressure = 100.00;
   ambientTemperature = 30.00;
 
 }
 
+
+
 // Gibt eine zeile csv formatierte Sensordaten zurück
 char* getCsvSensorData()
 {
-  char buffer[64];
-  sprintf(buffer,"%d,%d,%d,%d,%d,%d",waterVolume, waterPressure,air1Pressure, air2Pressure, ambientPressure, ambientTemperature);
-  return buffer;
+  //tmp buffer für string
+  char buffer[64]; 
+  
+  // Sensordaten aktualisieren
+  getSensorData(); 
+
+  // Sensordaten formatieren (0,0,23567,16987,15110,17687)
+  sprintf(buffer,"%d,%d,%d,%d,%d,%d",waterVolume, waterPressure, air1Pressure, air2Pressure, ambientPressure, ambientTemperature); 
+  
+  return buffer; // Sensordaten zurück geben
 }
+
 
 #endif

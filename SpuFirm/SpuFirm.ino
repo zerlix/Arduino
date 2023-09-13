@@ -64,6 +64,8 @@ void setup() {
   // init Views
   menuView = new MenuView();
   standbyView = new StandbyView(); 
+  protokollView = new ProtokollView();
+  kalibrierungsView = new KalibrierungsView();
 }
 
 
@@ -76,31 +78,50 @@ void loop() {
 
   // Lese x/y Koordinaten, falls auf das touchpad geklickt wurde
   getXY();
-  
-  // liest die aktuellen Sensordaten 
-  getSensorData();
-
+ 
   // Schreibe Sensordaten ins Logfile
   if(! l.writeLog(getCsvSensorData())) {
     Serial.println("Error:");
   }
   
+   
+  // liest die aktuellen Sensordaten 
+  // noch nötig ???? 
+  // Sonsordaten werden schon beim aufruf von getCsvSensorData() aktualisiert
+  // getSensorData();
+
 
   // Welcher View soll angezeigt werden  
   switch(currentView){
     case STANDBYVIEW:
       if(viewChanged) {
         standbyView->display();
-      };
+      }
       standbyView->loop(waterVolume, waterPressure, air1Pressure, air2Pressure, ambientPressure, ambientTemperature, &pressPointTft);
       break;
     case MENUVIEW:
       if(viewChanged) {
        menuView->display();
        viewChanged = false;
-      };
+      }
       menuView->loop(waterVolume, waterPressure, air1Pressure, air2Pressure, &pressPointTft);
       break;
+    case PROTOKOLLVIEW:
+      if(viewChanged) {
+       protokollView->display();
+       viewChanged = false;
+      }
+      protokollView->loop(&pressPointTft);
+      break;
+    case KALIBRIERUNGSVIEW:
+      if(viewChanged) {
+       kalibrierungsView->display();
+       viewChanged = false;
+      }
+      kalibrierungsView->loop(&pressPointTft);
+      break;
+
+
   }
   delay(50);
 }
