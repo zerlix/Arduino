@@ -67,7 +67,7 @@ class StandbyView{
       this->prevVolume = volume;
 
       //TEXTAUSGABE DRUCK WASSER
-      if(abs(waterPressure-this->prevWaterPressure)>0.03*this->prevWaterPressure) {
+      if( abs(waterPressure-this->prevWaterPressure)>0.03*this->prevWaterPressure) {
           this->prevWaterPressure = 0.6*this->prevWaterPressure + 0.4*waterPressure;   // Tiefpassfilter
           printValue(String(this->prevWaterPressure).c_str(), 1, true, "mbar");
       }

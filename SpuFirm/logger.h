@@ -10,6 +10,9 @@ extern SdFat sd;
 /**
  * @class Logger
  * einfache Logfile Klasse.
+ * TODO: 
+ *      - Neuer Logfile bei Max Dateigrösse
+ *      - einfache "tail/cat" funtion
  **/
 
 class Logger {

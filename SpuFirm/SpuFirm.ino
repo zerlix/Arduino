@@ -2,7 +2,6 @@
 #include <Streaming.h>
 #include <SPI.h>
 #include <SdFat.h>
-#include <Adafruit_BMP085.h>
 #include <TouchScreen.h>
 #include <MCUFRIEND_kbv.h>
 #include "shell.h"
@@ -36,12 +35,13 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300); // Touchscreen
 TSPoint pressPointTft;
 
 SdFat sd;  // SD Karte  
-Shell  s;  // CLI / Shell 
+Shell  cli;  // CLI / Shell 
 Logger l;  // logger
-Adafruit_BMP085 bmp; //bmp Sensor
+Sensors s;
 
 
-void setup() {
+void setup() 
+{
 
   pinMode(33, INPUT);
 
@@ -66,6 +66,7 @@ void setup() {
   standbyView = new StandbyView(); 
   protokollView = new ProtokollView();
   kalibrierungsView = new KalibrierungsView();
+
 }
 
 
@@ -74,37 +75,35 @@ void loop() {
 
   // Falls verfügbar commando aus der Seriellen 
   // Konsole lesen und ausführen
-  s.getCommand();
+  cli.getCommand();
 
+  
   // Lese x/y Koordinaten, falls auf das touchpad geklickt wurde
   getXY();
  
+
+  // TODO: Sensor klasse überarbeiten
+  s.getSensorData();
+
   // Schreibe Sensordaten ins Logfile
-  if(! l.writeLog(getCsvSensorData())) {
+  if(! l.writeLog(s.getCsvSensorData()) ) {
     Serial.println("Error:");
   }
   
-   
-  // liest die aktuellen Sensordaten 
-  // noch nötig ???? 
-  // Sonsordaten werden schon beim aufruf von getCsvSensorData() aktualisiert
-  // getSensorData();
-
-
   // Welcher View soll angezeigt werden  
   switch(currentView){
     case STANDBYVIEW:
       if(viewChanged) {
         standbyView->display();
       }
-      standbyView->loop(waterVolume, waterPressure, air1Pressure, air2Pressure, ambientPressure, ambientTemperature, &pressPointTft);
+      standbyView->loop(s.waterVolume, s.waterPressure, s.air1Pressure, s.air2Pressure, s.ambientPressure, s.ambientTemperature, &pressPointTft);
       break;
     case MENUVIEW:
       if(viewChanged) {
        menuView->display();
        viewChanged = false;
       }
-      menuView->loop(waterVolume, waterPressure, air1Pressure, air2Pressure, &pressPointTft);
+      menuView->loop(s.waterVolume, s.waterPressure, s.air1Pressure, s.air2Pressure, &pressPointTft);
       break;
     case PROTOKOLLVIEW:
       if(viewChanged) {
@@ -120,8 +119,6 @@ void loop() {
       }
       kalibrierungsView->loop(&pressPointTft);
       break;
-
-
   }
   delay(50);
 }

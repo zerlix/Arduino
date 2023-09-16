@@ -110,6 +110,7 @@ void printValue(const char* value, int rowIndex, bool marked, const char* unit)
       printText(xOffsetUnit, yOffsetUnit, unit, 2);
 }
 
+
 void getXY(void) {
  
   pressPointTft = ts.getPoint();

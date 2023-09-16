@@ -1,3 +1,4 @@
+#include "HardwareSerial.h"
 #include "shell.h"
 
 
@@ -43,7 +44,11 @@ bool Shell::_execCommand()
   else if (sBuffer.equals("ls")) {
     _ls();
     return;
-  } 
+  }
+  else if (sBuffer.equals("sensors")) {
+    _sensors();
+    return;
+  }
   else {
     Serial.println("> Error: unbekannter Befehl.");
     _help();
@@ -83,4 +88,10 @@ void Shell::_free()
 void Shell::_ls()
 {
   sd.ls(LS_R);
+}
+
+
+void Shell::_sensors()
+{
+  Serial.println(s.getCsvSensorData());
 }
