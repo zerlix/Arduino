@@ -132,12 +132,7 @@ public:
     // Sensordaten aktualisieren
     getSensorData();
     
-    char wv[8];
-    char wp[8];
-    char ap1[8];
-    char ap2[8];
-    char p[8];
-    char t[8];
+    char wv[8], wp[8], ap1[8], ap2[8], p[8], t[8];
 
     dtostrf(waterVolume, 6, 2, wv);
     dtostrf(waterPressure, 6, 2, wp);
@@ -148,13 +143,10 @@ public:
     dtostrf(ambientPressure, 6, 2, p);
     dtostrf(ambientTemperature, 6, 2, t);
     
-    // Sensordaten formatieren (0,0,23567,16987,15110,17687)
 
     sprintf(CSVbuffer, "%s,%s,%s,%s,%s,%s", wv, wp, ap1, ap2, p, t);
    
-        // Umwandlung und Formatierung direkt in CSVbuffer
-    //snprintf(CSVbuffer, sizeof(CSVbuffer), "%4.2f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f",
-      //       waterVolume, waterPressure, air1Pressure, air2Pressure, ambientPressure, ambientTemperature);
+
     
     return CSVbuffer;
   }
