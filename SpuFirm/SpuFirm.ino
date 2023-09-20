@@ -19,10 +19,10 @@
 // C++ Template, erstellt eine Klasse SoftSpiDriver
 SoftSpiDriver<SOFT_MISO_PIN, SOFT_MOSI_PIN, SOFT_SCK_PIN> softSpi; //Pin belegung  SD Karten Slot 
 
+
 MCUFRIEND_kbv tft; // Display
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300); // Touchscreen
-TSPoint pressPointTft;
-
+TSPoint pressPointTft; //
 SdFat sd;  // SD Karte  
 Shell  cli;  // CLI / Shell 
 Logger l;  // logger

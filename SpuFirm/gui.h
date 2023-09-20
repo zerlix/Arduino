@@ -41,9 +41,7 @@
 #define TS_MAXX 950
 #define TS_MAXY 930
 
-//const int XP=6,XM=A2,YP=A1,YM=7;
-//const int TS_LEFT=181,TS_RT=914,TS_TOP=978,TS_BOT=203;
-
+// Deklarationen in SpuFirm.ino
 extern MCUFRIEND_kbv tft;
 extern TouchScreen ts; // = TouchScreen(XP, YP, XM, YM, 300);
 extern TSPoint pressPointTft;
@@ -90,6 +88,7 @@ void printText(int xOffset, int yOffset, char* text, int textSize=3)
 };
 
 
+
 // WERTEAUSGABE
 void printValue(const char* value, int rowIndex, bool marked, const char* unit)
 {
@@ -129,13 +128,6 @@ void getXY(void) {
     pressPointTft.y = 240-pressPointTft.y; // flip y axis orientation
 
   }
-
-  /**
-  pressPointTft.x= map(pressPointTft.y, TS_LEFT, TS_RT, 0, 320);
-  pressPointTft.y = map(pressPointTft.x, TS_BOT, TS_TOP, 0, 240);
-  **/
-  //Serial << pressPointTft.x << "," << pressPointTft.y << "," << pressPointTft.z << endl;
-  
 
 }
 

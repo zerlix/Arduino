@@ -22,10 +22,7 @@ class Shell {
 private:
   String sBuffer;  // Buffer für input
 
-
 public:
-
-
 
   Shell::Shell() {
   }
@@ -108,5 +105,7 @@ private:
   void Shell::_sensors() {
     Serial.println(s.getCsvSensorData());
   }
-};
+
+}; // End Class
+
 #endif

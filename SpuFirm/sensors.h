@@ -1,8 +1,7 @@
-#include <stdlib.h>
-
 #ifndef SENSORS_H
 #define SENSORS_H
 #include <stdio.h>
+#include <stdlib.h>
 #include <Adafruit_BMP085.h>
 
 /** TODO:
@@ -30,6 +29,8 @@ public:
   double ScaleL2 = 193.0;            // Einführung der Variablen ScaleL2 vom Typ double für Skalierung des Luftdrucks an Messstelle 2
 
 
+  int SENSOR_PIN_VOLUME_WATER = 35;  // Festlegung von Pin 35 als Digital-Input-Pin für die Durchflussmessung Wasser
+
   //FESTLEGEN VON PINS A13 bis A15 ALS INPUTS FÜR DIE DRUCKSENSOREN (ANALOGE MESSUNG)
   int SensorPinWa = A13;       // Festlegung von Pin A13 als Analog-Input-Pin für die Druckmessung WASSER
   int SensorValueWa = 0L;      // Vorbelegung der Variablen SensorValueWa mit der Zahl 0 als long-Variable
@@ -43,14 +44,15 @@ public:
   int SensorValueL2 = 0L;      // Vorbelegung der Variablen SensorValueL2 mit der Zahl 0 als long-Variable
   int lastSensorValueL2 = 0L;  // Vorbelegung der Variablen lastSensorValueL2 mit der Zahl 0 als long-Variable
 
-  int SENSOR_PIN_VOLUME_WATER = 35;  // Festlegung von Pin 35 als Digital-Input-Pin für die Durchflussmessung Wasser
-
+  
   //EINFÜHREN VON VARIABLEN FÜR DEN DURCHFLUSSMESSER (DIGITALE MESSUNG)
   long TIMEOUT_WATER = 25000;  // Einführung der Variablen TimeOut vom Typ long für die Wartezeit nach der eine Sensorabfrage abgebrochen werden soll
   long DURATION_WATER_SENSOR = 50000;
  
   Adafruit_BMP085 bmp; //bmp Sensor
+
   const char CSVbuffer[64];
+
 
   Sensors() {
   }
@@ -114,11 +116,11 @@ public:
     // ambientTemperature = bmp.readTemperature();
     /***/
 
-    // Dummy Werte, wegen fehlenden Sensoren
-    waterVolume = 1000.37;
-    waterPressure = 2000.00;
-    air1Pressure = 1400.24;
-    air2Pressure = 3200.35;
+    // Dummy Werte, wegen fehlender Sensoren
+    //waterVolume = 1000.37;
+    //waterPressure = 923.00;
+    //air1Pressure = 1400.24;
+    //air2Pressure = 3200.35;
     ambientPressure = 100.00;
     ambientTemperature = 30.00;
   }
@@ -143,11 +145,8 @@ public:
     dtostrf(ambientPressure, 6, 2, p);
     dtostrf(ambientTemperature, 6, 2, t);
     
-
     sprintf(CSVbuffer, "%s,%s,%s,%s,%s,%s", wv, wp, ap1, ap2, p, t);
    
-
-    
     return CSVbuffer;
   }
 };

@@ -16,9 +16,11 @@ class StandbyView{
     Button* menuButton;
     
   public:
+
     StandbyView(){
         menuButton = new Button(65, 200, 185, 40, "   MENU");
     }
+
 
     void display(){
       //BILDSCHIRM SCHWARZ EINFÄRBEN
@@ -60,12 +62,20 @@ class StandbyView{
         
       delay(20);
     }
+
+
     void loop(double volume, double waterPressure, double air1, double air2, double ambientPressure, double ambientTemperature, TSPoint *pressPointTft){
       
       //TEXTAUSGABE VOLUMENSTROM
       printValue(String(volume).c_str(), 0, volume!=this->prevVolume, "l/min");
       this->prevVolume = volume;
 
+      // abs() funktionen, muss kontrolliert werden.
+      // https://www.arduino.cc/reference/de/language/functions/math/abs/ 
+      // Zitat: "Es sollten keine anderen Funktionen innerhalb der Klammern verwendet werden. Dies kann zu falschen Ergebnissen führen."
+      //
+      // Überlegung: "Tiefpassfilter" in Sensors.h einbauen ?
+      //
       //TEXTAUSGABE DRUCK WASSER
       if( abs(waterPressure-this->prevWaterPressure)>0.03*this->prevWaterPressure) {
           this->prevWaterPressure = 0.6*this->prevWaterPressure + 0.4*waterPressure;   // Tiefpassfilter
@@ -98,7 +108,6 @@ class StandbyView{
         if(menuButton->isPressedBy(pressPointTft->x, pressPointTft->y)){
           viewChanged = true;
           currentView = MENUVIEW;
-          //menuView->display();
         }
       }
     }
