@@ -32,6 +32,11 @@
 #ifdef __AVR__
 #include <avr/io.h>
 #endif  // __AVR__
+
+
+// ------------------ Software SPI ------------------ //
+#define SPI_DRIVER_SELECT 2
+
 //
 // To try UTF-8 encoded filenames.
 // #define USE_UTF8_LONG_NAMES 1
@@ -119,7 +124,7 @@
  * 3 - An external SPI driver derived from SdSpiBaseClass is always used.
  */
 #ifndef SPI_DRIVER_SELECT
-#define SPI_DRIVER_SELECT 2
+#define SPI_DRIVER_SELECT 0
 #endif  // SPI_DRIVER_SELECT
 /**
  * If USE_SPI_ARRAY_TRANSFER is one and the standard SPI library is
