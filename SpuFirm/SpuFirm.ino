@@ -35,7 +35,7 @@ void setup()
   pinMode(33, INPUT);
 
   // Initialisierung der seriellen Konsole
-  Serial.begin(115200);
+  Serial.begin(57600);
   while (!Serial){
     Serial.println("Error");
   }

@@ -77,7 +77,6 @@ void printValue(const char* value, int rowIndex, bool marked, const char* unit);
 
 
 
-
 // TEXTAUSGABE
 void printText(int xOffset, int yOffset, char* text, int textSize=3)
 {

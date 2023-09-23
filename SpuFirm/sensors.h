@@ -136,14 +136,14 @@ public:
     
     char wv[8], wp[8], ap1[8], ap2[8], p[8], t[8];
 
-    dtostrf(waterVolume, 6, 2, wv);
-    dtostrf(waterPressure, 6, 2, wp);
+    dtostrf(waterVolume, 4, 2, wv);
+    dtostrf(waterPressure, 4, 2, wp);
     
-    dtostrf(air1Pressure, 5, 2, ap1);
-    dtostrf(air2Pressure, 6, 2, ap2);
+    dtostrf(air1Pressure, 4, 2, ap1);
+    dtostrf(air2Pressure, 4, 2, ap2);
     
-    dtostrf(ambientPressure, 6, 2, p);
-    dtostrf(ambientTemperature, 6, 2, t);
+    dtostrf(ambientPressure, 4, 2, p);
+    dtostrf(ambientTemperature, 4, 2, t);
     
     sprintf(CSVbuffer, "%s,%s,%s,%s,%s,%s", wv, wp, ap1, ap2, p, t);
    

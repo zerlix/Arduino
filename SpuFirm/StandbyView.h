@@ -67,17 +67,18 @@ class StandbyView{
     void loop(double volume, double waterPressure, double air1, double air2, double ambientPressure, double ambientTemperature, TSPoint *pressPointTft){
       
       //TEXTAUSGABE VOLUMENSTROM
-      printValue(String(volume).c_str(), 0, volume!=this->prevVolume, "l/min");
+      // printValue(String(volume).c_str(), 0, volume!=this->prevVolume, "l/min"); // Weshalb sieht der 3. Parameter so aus ? volume!=this->prevVolume
+      printValue(String(volume).c_str(), 0, true, "l/min");
       this->prevVolume = volume;
 
-      // abs() funktionen, muss kontrolliert werden.
+      // abs() funktionen müssen kontrolliert werden.
       // https://www.arduino.cc/reference/de/language/functions/math/abs/ 
       // Zitat: "Es sollten keine anderen Funktionen innerhalb der Klammern verwendet werden. Dies kann zu falschen Ergebnissen führen."
       //
       // Überlegung: "Tiefpassfilter" in Sensors.h einbauen ?
       //
       //TEXTAUSGABE DRUCK WASSER
-      if( abs(waterPressure-this->prevWaterPressure)>0.03*this->prevWaterPressure) {
+      if( abs(waterPressure-this->prevWaterPressure)>0.03*this->prevWaterPressure ) {  
           this->prevWaterPressure = 0.6*this->prevWaterPressure + 0.4*waterPressure;   // Tiefpassfilter
           printValue(String(this->prevWaterPressure).c_str(), 1, true, "mbar");
       }
