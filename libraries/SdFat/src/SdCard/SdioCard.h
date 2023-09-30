@@ -22,17 +22,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-/**
- * \file
- * \brief Classes for SDIO cards.
- */
 #ifndef SdioCard_h
 #define SdioCard_h
 #include "../common/SysCall.h"
 #include "SdCardInterface.h"
-/** Use programmed I/O with FIFO. */
+
 #define FIFO_SDIO 0
-/** Use programmed I/O with DMA. */
 #define DMA_SDIO 1
 /**
  * \class SdioConfig
@@ -47,10 +42,9 @@ class SdioConfig {
    */
   explicit SdioConfig(uint8_t opt) : m_options(opt) {}
   /** \return SDIO card options. */
-  uint8_t options() { return m_options; }
+  uint8_t options() {return m_options;}
   /** \return true if DMA_SDIO. */
-  bool useDma() { return m_options & DMA_SDIO; }
-
+  bool useDma() {return m_options & DMA_SDIO;}
  private:
   uint8_t m_options = FIFO_SDIO;
 };
@@ -79,7 +73,7 @@ class SdioCard : public SdCardInterface {
   void end() {}
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  uint32_t __attribute__((error("use sectorCount()"))) cardSize();
+    uint32_t __attribute__((error("use sectorCount()"))) cardSize();
 #endif  // DOXYGEN_SHOULD_SKIP_THIS
   /** Erase a range of sectors.
    *
@@ -95,8 +89,7 @@ class SdioCard : public SdCardInterface {
    */
   bool erase(uint32_t firstSector, uint32_t lastSector);
   /**
-   * \return code for the last error. See SdCardInfo.h for a list of error
-   * codes.
+   * \return code for the last error. See SdCardInfo.h for a list of error codes.
    */
   uint8_t errorCode() const;
   /** \return error data for last error. */
@@ -165,12 +158,7 @@ class SdioCard : public SdCardInterface {
    * \param[out] scr Value of SCR register.
    * \return true for success or false for failure.
    */
-  bool readSCR(scr_t* scr);
-  /** Return the 64 byte SD Status register.
-   * \param[out] sds location for 64 status bytes.
-   * \return true for success or false for failure.
-   */
-  bool readSDS(sds_t* sds);
+  bool readSCR(scr_t *scr);
   /** Start a read multiple sectors sequence.
    *
    * \param[in] sector Address of first sector in sequence.
@@ -198,7 +186,7 @@ class SdioCard : public SdCardInterface {
   bool readStop();
   /** \return SDIO card status. */
   uint32_t status();
-  /**
+    /**
    * Determine the size of an SD flash memory card.
    *
    * \return The number of 512 byte data sectors in the card

@@ -23,9 +23,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 #define DBG_FILE "FsCache.cpp"
-#include "FsCache.h"
-
 #include "DebugMacros.h"
+#include "FsCache.h"
 //------------------------------------------------------------------------------
 uint8_t* FsCache::prepare(uint32_t sector, uint8_t option) {
   if (!m_blockDev) {
@@ -49,7 +48,7 @@ uint8_t* FsCache::prepare(uint32_t sector, uint8_t option) {
   m_status |= option & CACHE_STATUS_MASK;
   return m_buffer;
 
-fail:
+ fail:
   return nullptr;
 }
 //------------------------------------------------------------------------------
@@ -61,7 +60,8 @@ bool FsCache::sync() {
     }
     // mirror second FAT
     if (m_status & CACHE_STATUS_MIRROR_FAT) {
-      if (!m_blockDev->writeSector(m_sector + m_mirrorOffset, m_buffer)) {
+      uint32_t sector = m_sector + m_mirrorOffset;
+      if (!m_blockDev->writeSector(sector, m_buffer)) {
         DBG_FAIL_MACRO;
         goto fail;
       }
@@ -70,6 +70,6 @@ bool FsCache::sync() {
   }
   return true;
 
-fail:
+ fail:
   return false;
 }

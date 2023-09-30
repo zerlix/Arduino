@@ -24,16 +24,14 @@
  */
 #ifndef FatFormatter_h
 #define FatFormatter_h
-#include "../common/FsBlockDevice.h"
 #include "../common/SysCall.h"
+#include "../common/FsBlockDevice.h"
 /**
  * \class FatFormatter
  * \brief Format a FAT volume.
  */
 class FatFormatter {
  public:
-  /** Constructor. */
-  FatFormatter() = default;
   /**
    * Format a FAT volume.
    *

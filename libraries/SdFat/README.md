@@ -1,13 +1,8 @@
-### Warning: Major Reformat of Source in 2.2.2
+### Warning: This is SdFat Version 2.
 
-There are a huge number of changes in 2.2.2 since I decided to use clang-format
-to force Google style formatting.
+Earlier releases of Version 1 are here:
 
-I did this to avoid warnings from the static analysis programs Cppcheck and
-cpplint.
-
-clang-format is aggressive so it may actually cause code to fail.  For example
-clang-format rearranges the order of includes according to the selected style.
+https://github.com/greiman/SdFat/releases
 
 UTF-8 encoded filenames are supported in v2.1.0 or later.
 

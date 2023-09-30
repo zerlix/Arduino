@@ -37,9 +37,7 @@ FsBaseFile::FsBaseFile(const FsBaseFile& from) {
 }
 //------------------------------------------------------------------------------
 FsBaseFile& FsBaseFile::operator=(const FsBaseFile& from) {
-  if (this == &from) {
-    return *this;
-  }
+  if (this == &from) {return *this;}
   close();
   if (from.m_fFile) {
     m_fFile = new (m_fileMem) FatFile;

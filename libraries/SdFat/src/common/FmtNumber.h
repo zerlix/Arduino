@@ -25,13 +25,17 @@
 #ifndef FmtNumber_h
 #define FmtNumber_h
 #include <math.h>
-#include <stddef.h>
 #include <stdint.h>
-inline bool isDigit(char c) { return '0' <= (c) && (c) <= '9'; }
-inline bool isSpace(char c) { return (c) == ' ' || (0X9 <= (c) && (c) <= 0XD); }
+#include <stddef.h>
+inline bool isDigit(char c) {
+  return '0' <= (c) && (c) <= '9';
+}
+inline bool isSpace(char c) {
+  return (c) == ' ' || (0X9 <= (c) && (c) <= 0XD);
+}
 char* fmtBase10(char* str, uint16_t n);
 char* fmtBase10(char* str, uint32_t n);
-char* fmtDouble(char* str, double d, uint8_t prec, bool altFmt);
+char* fmtDouble(char *str, double d, uint8_t prec, bool altFmt);
 char* fmtDouble(char* str, double d, uint8_t prec, bool altFmt, char expChar);
 char* fmtHex(char* str, uint32_t n);
 char* fmtSigned(char* str, int32_t n, uint8_t base, bool caps);

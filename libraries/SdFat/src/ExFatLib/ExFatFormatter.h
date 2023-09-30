@@ -31,8 +31,6 @@
  */
 class ExFatFormatter {
  public:
-  /** Constructor. */
-  ExFatFormatter() = default;
   /**
    * Format an exFAT volume.
    *
@@ -43,7 +41,6 @@ class ExFatFormatter {
    * \return true for success or false for failure.
    */
   bool format(FsBlockDevice* dev, uint8_t* secBuf, print_t* pr = nullptr);
-
  private:
   bool syncUpcase();
   bool writeUpcase(uint32_t sector);

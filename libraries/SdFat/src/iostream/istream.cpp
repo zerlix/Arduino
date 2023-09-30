@@ -22,13 +22,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#include "istream.h"
-
-#ifdef __AVR__
-#include <avr/pgmspace.h>
-#endif  // __AVR__
-#include <ctype.h>
 #include <float.h>
+#include <ctype.h>
+#include "istream.h"
 //------------------------------------------------------------------------------
 int istream::get() {
   int c;
@@ -50,11 +46,12 @@ istream& istream::get(char& c) {
   return *this;
 }
 //------------------------------------------------------------------------------
-istream& istream::get(char* str, streamsize n, char delim) {
+istream& istream::get(char *str, streamsize n, char delim) {
+  int c;
   pos_t pos;
   m_gcount = 0;
-  while ((m_gcount + 1) < n) {
-    int c = getch(&pos);
+  while ((m_gcount + 1)  < n) {
+    c = getch(&pos);
     if (c < 0) {
       break;
     }
@@ -73,7 +70,7 @@ istream& istream::get(char* str, streamsize n, char delim) {
   return *this;
 }
 //------------------------------------------------------------------------------
-void istream::getBool(bool* b) {
+void istream::getBool(bool *b) {
   if ((flags() & boolalpha) == 0) {
     getNumber(b);
     return;
@@ -81,7 +78,7 @@ void istream::getBool(bool* b) {
 #ifdef __AVR__
   PGM_P truePtr = PSTR("true");
   PGM_P falsePtr = PSTR("false");
-#else   // __AVR__
+#else  // __AVR__
   const char* truePtr = "true";
   const char* falsePtr = "false";
 #endif  // __AVR
@@ -95,7 +92,7 @@ void istream::getBool(bool* b) {
 #ifdef __AVR__
     falseOk = falseOk && c == pgm_read_byte(falsePtr + i);
     trueOk = trueOk && c == pgm_read_byte(truePtr + i);
-#else   // __AVR__
+#else  // __AVR__
     falseOk = falseOk && c == falsePtr[i];
     trueOk = trueOk && c == truePtr[i];
 #endif  // __AVR__
@@ -152,8 +149,8 @@ bool istream::getDouble(double* value) {
   while (1) {
     if (isdigit(c)) {
       got_digit = true;
-      if (frac < uint32_max / 10) {
-        frac = frac * 10 + (c - '0');
+      if (frac < uint32_max/10) {
+        frac = frac * 10 + (c  - '0');
         if (got_dot) {
           fracExp--;
         }
@@ -200,7 +197,7 @@ bool istream::getDouble(double* value) {
     if (exp & 1) {
       if (expNeg) {
         // check for underflow
-        if (v < DBL_MIN * pow10 && frac != 0) {
+        if (v < DBL_MIN * pow10  && frac != 0) {
           goto fail;
         }
         v /= pow10;
@@ -219,7 +216,7 @@ bool istream::getDouble(double* value) {
   *value = neg ? -v : v;
   return true;
 
-fail:
+ fail:
   // error restore position to last good place
   setpos(&endPos);
   setstate(failbit);
@@ -227,14 +224,15 @@ fail:
 }
 //------------------------------------------------------------------------------
 
-istream& istream::getline(char* str, streamsize n, char delim) {
+istream& istream::getline(char *str, streamsize n, char delim) {
   pos_t pos;
+  int c;
   m_gcount = 0;
   if (n > 0) {
     str[0] = '\0';
   }
   while (1) {
-    int c = getch(&pos);
+    c = getch(&pos);
     if (c < 0) {
       break;
     }
@@ -242,7 +240,7 @@ istream& istream::getline(char* str, streamsize n, char delim) {
       m_gcount++;
       break;
     }
-    if ((m_gcount + 1) >= n) {
+    if ((m_gcount + 1)  >=  n) {
       setpos(&pos);
       setstate(failbit);
       break;
@@ -312,14 +310,14 @@ bool istream::getNumber(uint32_t posMax, uint32_t negMax, uint32_t* num) {
   }
   setpos(&endPos);
   if (any > 0 || (have_zero && any >= 0)) {
-    *num = neg ? -val : val;
+    *num =  neg ? -val : val;
     return true;
   }
   setstate(failbit);
   return false;
 }
 //------------------------------------------------------------------------------
-void istream::getStr(char* str) {
+void istream::getStr(char *str) {
   pos_t pos;
   uint16_t i = 0;
   uint16_t m = width() ? width() - 1 : 0XFFFE;
@@ -347,9 +345,10 @@ void istream::getStr(char* str) {
 }
 //------------------------------------------------------------------------------
 istream& istream::ignore(streamsize n, int delim) {
+  int c;
   m_gcount = 0;
   while (m_gcount < n) {
-    int c = getch();
+    c = getch();
     if (c < 0) {
       break;
     }

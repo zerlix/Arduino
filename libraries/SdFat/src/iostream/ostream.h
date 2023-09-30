@@ -42,12 +42,14 @@ class ostream : public virtual ios {
    * \param[in] pf function to call
    * \return the stream
    */
-  ostream &operator<<(ostream &(*pf)(ostream &str)) { return pf(*this); }
+  ostream& operator<< (ostream& (*pf)(ostream& str)) {
+    return pf(*this);
+  }
   /** call manipulator
    * \param[in] pf function to call
    * \return the stream
    */
-  ostream &operator<<(ios_base &(*pf)(ios_base &str)) {
+  ostream& operator<< (ios_base& (*pf)(ios_base& str)) {
     pf(*this);
     return *this;
   }
@@ -55,7 +57,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(bool arg) {
+  ostream &operator<< (bool arg) {
     putBool(arg);
     return *this;
   }
@@ -63,7 +65,7 @@ class ostream : public virtual ios {
    * \param[in] arg string to output
    * \return the stream
    */
-  ostream &operator<<(const char *arg) {
+  ostream &operator<< (const char *arg) {
     putStr(arg);
     return *this;
   }
@@ -71,16 +73,16 @@ class ostream : public virtual ios {
    * \param[in] arg string to output
    * \return the stream
    */
-  ostream &operator<<(const signed char *arg) {
-    putStr(reinterpret_cast<const char *>(arg));
+  ostream &operator<< (const signed char *arg) {
+    putStr((const char*)arg);
     return *this;
   }
   /** Output string
    * \param[in] arg string to output
    * \return the stream
    */
-  ostream &operator<<(const unsigned char *arg) {
-    putStr(reinterpret_cast<const char *>(arg));
+  ostream &operator<< (const unsigned char *arg) {
+    putStr((const char*)arg);
     return *this;
   }
 #if ENABLE_ARDUINO_STRING
@@ -88,7 +90,7 @@ class ostream : public virtual ios {
    * \param[in] arg string to output
    * \return the stream
    */
-  ostream &operator<<(const String &arg) {
+  ostream &operator<< (const String& arg) {
     putStr(arg.c_str());
     return *this;
   }
@@ -97,7 +99,7 @@ class ostream : public virtual ios {
    * \param[in] arg character to output
    * \return the stream
    */
-  ostream &operator<<(char arg) {
+  ostream &operator<< (char arg) {
     putChar(arg);
     return *this;
   }
@@ -105,7 +107,7 @@ class ostream : public virtual ios {
    * \param[in] arg character to output
    * \return the stream
    */
-  ostream &operator<<(signed char arg) {
+  ostream &operator<< (signed char arg) {
     putChar(static_cast<char>(arg));
     return *this;
   }
@@ -113,7 +115,7 @@ class ostream : public virtual ios {
    * \param[in] arg character to output
    * \return the stream
    */
-  ostream &operator<<(unsigned char arg) {
+  ostream &operator<< (unsigned char arg) {
     putChar(static_cast<char>(arg));
     return *this;
   }
@@ -121,7 +123,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(double arg) {
+  ostream &operator<< (double arg) {
     putDouble(arg);
     return *this;
   }
@@ -129,7 +131,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(float arg) {
+  ostream &operator<< (float arg) {
     putDouble(arg);
     return *this;
   }
@@ -137,7 +139,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(short arg) {  // NOLINT
+  ostream &operator<< (short arg) {  // NOLINT
     putNum((int32_t)arg);
     return *this;
   }
@@ -145,7 +147,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(unsigned short arg) {  // NOLINT
+  ostream &operator<< (unsigned short arg) {  // NOLINT
     putNum((uint32_t)arg);
     return *this;
   }
@@ -153,7 +155,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(int arg) {
+  ostream &operator<< (int arg) {
     putNum((int32_t)arg);
     return *this;
   }
@@ -161,7 +163,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(unsigned int arg) {
+  ostream &operator<< (unsigned int arg) {
     putNum((uint32_t)arg);
     return *this;
   }
@@ -169,7 +171,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(long arg) {  // NOLINT
+  ostream &operator<< (long arg) {  // NOLINT
     putNum((int32_t)arg);
     return *this;
   }
@@ -177,7 +179,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(unsigned long arg) {  // NOLINT
+  ostream &operator<< (unsigned long arg) {  // NOLINT
     putNum((uint32_t)arg);
     return *this;
   }
@@ -185,7 +187,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(long long arg) {  // NOLINT
+  ostream &operator<< (long long arg) {  // NOLINT
     putNum((int64_t)arg);
     return *this;
   }
@@ -193,7 +195,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(unsigned long long arg) {  // NOLINT
+  ostream &operator<< (unsigned long long arg) {  // NOLINT
     putNum((uint64_t)arg);
     return *this;
   }
@@ -201,7 +203,7 @@ class ostream : public virtual ios {
    * \param[in] arg value to output
    * \return the stream
    */
-  ostream &operator<<(const void *arg) {
+  ostream& operator<< (const void* arg) {
     putNum(reinterpret_cast<uint32_t>(arg));
     return *this;
   }
@@ -209,8 +211,8 @@ class ostream : public virtual ios {
    * \param[in] arg pointing to flash string
    * \return the stream
    */
-  ostream &operator<<(const __FlashStringHelper *arg) {
-    putPgm(reinterpret_cast<const char *>(arg));
+  ostream &operator<< (const __FlashStringHelper *arg) {
+    putPgm(reinterpret_cast<const char*>(arg));
     return *this;
   }
   /**
@@ -222,17 +224,17 @@ class ostream : public virtual ios {
    * \param[in] ch The character
    * \return A reference to the ostream object.
    */
-  ostream &put(char ch) {
+  ostream& put(char ch) {
     putch(ch);
     return *this;
   }
-  //  ostream& write(char *str, streamsize count);
+//  ostream& write(char *str, streamsize count);
   /**
    * Flushes the buffer associated with this stream. The flush function
    * calls the sync function of the associated file.
    * \return A reference to the ostream object.
    */
-  ostream &flush() {
+  ostream& flush() {
     if (!sync()) {
       setstate(badbit);
     }
@@ -241,13 +243,15 @@ class ostream : public virtual ios {
   /**
    * \return the stream position
    */
-  pos_type tellp() { return tellpos(); }
+  pos_type tellp() {
+    return tellpos();
+  }
   /**
    * Set the stream position
    * \param[in] pos The absolute position in which to move the write pointer.
    * \return Is always *this.  Failure is indicated by the state of *this.
    */
-  ostream &seekp(pos_type pos) {
+  ostream& seekp(pos_type pos) {
     if (!seekpos(pos)) {
       setstate(failbit);
     }
@@ -261,7 +265,7 @@ class ostream : public virtual ios {
    * \param[in] way One of ios::beg, ios::cur, or ios::end.
    * \return Is always *this.  Failure is indicated by the state of *this.
    */
-  ostream &seekp(off_type off, seekdir way) {
+  ostream& seekp(off_type off, seekdir way) {
     if (!seekoff(off, way)) {
       setstate(failbit);
     }
@@ -288,14 +292,14 @@ class ostream : public virtual ios {
   void putDouble(double n);
   void putNum(int32_t n);
   void putNum(int64_t n);
-  void putNum(uint32_t n) { putNum(n, false); }
-  void putNum(uint64_t n) { putNum(n, false); }
-  void putPgm(const char *str);
-  void putStr(const char *str);
+  void putNum(uint32_t n) {putNum(n, false);}
+  void putNum(uint64_t n) {putNum(n, false);}
+  void putPgm(const char* str);
+  void putStr(const char* str);
 
-  template <typename T>
-  char *fmtNum(T n, char *ptr, uint8_t base) {
-    char a = (flags() & uppercase) ? 'A' - 10 : 'a' - 10;
+  template<typename T>
+  char* fmtNum(T n, char *ptr, uint8_t base) {
+    char a = flags() & uppercase ? 'A' - 10 : 'a' - 10;
     do {
       T m = n;
       n /= base;
@@ -305,12 +309,12 @@ class ostream : public virtual ios {
     return ptr;
   }
 
-  template <typename T>
+  template<typename T>
   void putNum(T n, bool neg) {
-    char buf[(8 * sizeof(T) + 2) / 3 + 2];
-    char *ptr = buf + sizeof(buf) - 1;
-    char *num;
-    char *str;
+    char buf[(8*sizeof(T) + 2)/3 + 2];
+    char* ptr = buf + sizeof(buf) - 1;
+    char* num;
+    char* str;
     uint8_t base = flagsToBase();
     *ptr = '\0';
     str = num = fmtNum(n, ptr, base);

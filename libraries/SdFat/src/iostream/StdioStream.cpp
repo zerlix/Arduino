@@ -23,9 +23,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 #include "StdioStream.h"
-#ifdef __AVR__
-#include <avr/pgmspace.h>
-#endif  // __AVR__
 #include "../common/FmtNumber.h"
 //------------------------------------------------------------------------------
 int StdioStream::fclose() {
@@ -58,11 +55,11 @@ int StdioStream::fflush() {
 //------------------------------------------------------------------------------
 char* StdioStream::fgets(char* str, size_t num, size_t* len) {
   char* s = str;
+  size_t n;
   if (num-- == 0) {
     return 0;
   }
   while (num) {
-    size_t n;
     if ((n = m_r) == 0) {
       if (!fillBuf()) {
         if (s == str) {
@@ -101,43 +98,43 @@ bool StdioStream::fopen(const char* path, const char* mode) {
   oflag_t oflag;
   uint8_t m;
   switch (*mode++) {
-    case 'a':
-      m = O_WRONLY;
-      oflag = O_CREAT | O_APPEND;
-      m_status = S_SWR;
+  case 'a':
+    m = O_WRONLY;
+    oflag = O_CREAT | O_APPEND;
+    m_status = S_SWR;
+    break;
+
+  case 'r':
+    m = O_RDONLY;
+    oflag = 0;
+    m_status = S_SRD;
+    break;
+
+  case 'w':
+    m = O_WRONLY;
+    oflag = O_CREAT | O_TRUNC;
+    m_status = S_SWR;
+    break;
+
+  default:
+    goto fail;
+  }
+  while (*mode) {
+    switch (*mode++) {
+    case '+':
+      m_status = S_SRW;
+      m = O_RDWR;
       break;
 
-    case 'r':
-      m = O_RDONLY;
-      oflag = 0;
-      m_status = S_SRD;
+    case 'b':
       break;
 
-    case 'w':
-      m = O_WRONLY;
-      oflag = O_CREAT | O_TRUNC;
-      m_status = S_SWR;
+    case 'x':
+      oflag |= O_EXCL;
       break;
 
     default:
       goto fail;
-  }
-  while (*mode) {
-    switch (*mode++) {
-      case '+':
-        m_status = S_SRW;
-        m = O_RDWR;
-        break;
-
-      case 'b':
-        break;
-
-      case 'x':
-        oflag |= O_EXCL;
-        break;
-
-      default:
-        goto fail;
     }
   }
   oflag |= m;
@@ -149,7 +146,7 @@ bool StdioStream::fopen(const char* path, const char* mode) {
   m_p = m_buf;
   return true;
 
-fail:
+ fail:
   m_status = 0;
   return false;
 }
@@ -161,7 +158,7 @@ int StdioStream::fputs(const char* str) {
 //------------------------------------------------------------------------------
 size_t StdioStream::fread(void* ptr, size_t size, size_t count) {
   uint8_t* dst = reinterpret_cast<uint8_t*>(ptr);
-  size_t total = size * count;
+  size_t total = size*count;
   if (total == 0) {
     return 0;
   }
@@ -172,7 +169,7 @@ size_t StdioStream::fread(void* ptr, size_t size, size_t count) {
     m_p += m_r;
     need -= m_r;
     if (!fillBuf()) {
-      return (total - need) / size;
+      return (total - need)/size;
     }
   }
   memcpy(dst, m_p, need);
@@ -189,37 +186,37 @@ int StdioStream::fseek(int32_t offset, int origin) {
     }
   }
   switch (origin) {
-    case SEEK_CUR:
-      pos = ftell();
-      if (pos < 0) {
-        goto fail;
-      }
-      pos += offset;
-      if (!StreamBaseFile::seekCur(pos)) {
-        goto fail;
-      }
-      break;
-
-    case SEEK_SET:
-      if (!StreamBaseFile::seekSet(offset)) {
-        goto fail;
-      }
-      break;
-
-    case SEEK_END:
-      if (!StreamBaseFile::seekEnd(offset)) {
-        goto fail;
-      }
-      break;
-
-    default:
+  case SEEK_CUR:
+    pos = ftell();
+    if (pos < 0) {
       goto fail;
+    }
+    pos += offset;
+    if (!StreamBaseFile::seekCur(pos)) {
+      goto fail;
+    }
+    break;
+
+  case SEEK_SET:
+    if (!StreamBaseFile::seekSet(offset)) {
+      goto fail;
+    }
+    break;
+
+  case SEEK_END:
+    if (!StreamBaseFile::seekEnd(offset)) {
+      goto fail;
+    }
+    break;
+
+  default:
+    goto fail;
   }
   m_r = 0;
   m_p = m_buf;
   return 0;
 
-fail:
+ fail:
   return EOF;
 }
 //------------------------------------------------------------------------------
@@ -237,7 +234,7 @@ int32_t StdioStream::ftell() {
 }
 //------------------------------------------------------------------------------
 size_t StdioStream::fwrite(const void* ptr, size_t size, size_t count) {
-  return write(ptr, count * size) < 0 ? EOF : count;
+  return write(ptr, count*size) < 0 ? EOF : count;
 }
 //------------------------------------------------------------------------------
 int StdioStream::write(const void* buf, size_t count) {
@@ -260,9 +257,8 @@ int StdioStream::write(const void* buf, size_t count) {
 }
 //------------------------------------------------------------------------------
 #if (defined(ARDUINO) && ENABLE_ARDUINO_FEATURES) || defined(DOXYGEN)
-size_t StdioStream::print(const __FlashStringHelper* str) {
-#ifdef __AVR__
-  PGM_P p = reinterpret_cast<PGM_P>(str);
+size_t StdioStream::print(const __FlashStringHelper *str) {
+  const char *p = (const char*)str;
   uint8_t c;
   while ((c = pgm_read_byte(p))) {
     if (putc(c) < 0) {
@@ -270,16 +266,13 @@ size_t StdioStream::print(const __FlashStringHelper* str) {
     }
     p++;
   }
-  return p - reinterpret_cast<PGM_P>(str);
-#else   // __AVR__
-  return print(reinterpret_cast<const char*>(str));
-#endif  // __AVR__
+  return p - (const char*)str;
 }
 #endif  // (defined(ARDUINO) && ENABLE_ARDUINO_FEATURES) || defined(DOXYGEN)
 //------------------------------------------------------------------------------
 int StdioStream::printDec(float value, uint8_t prec) {
   char buf[24];
-  char* ptr = fmtDouble(buf + sizeof(buf), value, prec, false);
+  char *ptr = fmtDouble(buf + sizeof(buf), value, prec, false);
   return write(ptr, buf + sizeof(buf) - ptr);
 }
 //------------------------------------------------------------------------------
@@ -311,7 +304,7 @@ int StdioStream::printDec(int16_t n) {
 //------------------------------------------------------------------------------
 int StdioStream::printDec(uint16_t n) {
   char buf[5];
-  char* ptr = fmtBase10(buf + sizeof(buf), n);
+  char *ptr = fmtBase10(buf + sizeof(buf), n);
   uint8_t len = buf + sizeof(buf) - ptr;
   return write(ptr, len);
 }
@@ -331,14 +324,14 @@ int StdioStream::printDec(int32_t n) {
 //------------------------------------------------------------------------------
 int StdioStream::printDec(uint32_t n) {
   char buf[10];
-  char* ptr = fmtBase10(buf + sizeof(buf), n);
+  char *ptr = fmtBase10(buf + sizeof(buf), n);
   uint8_t len = buf + sizeof(buf) - ptr;
   return write(ptr, len);
 }
 //------------------------------------------------------------------------------
 int StdioStream::printHex(uint32_t n) {
   char buf[8];
-  char* ptr = fmtHex(buf + sizeof(buf), n);
+  char *ptr = fmtHex(buf + sizeof(buf), n);
   uint8_t len = buf + sizeof(buf) - ptr;
   return write(ptr, len);
 }
@@ -384,7 +377,8 @@ int StdioStream::fillGet() {
 //------------------------------------------------------------------------------
 // private
 bool StdioStream::fillBuf() {
-  if (!(m_status & S_SRD)) {  // check for S_ERR and S_EOF ??/////////////////
+  if (!(m_status &
+        S_SRD)) {  // check for S_ERR and S_EOF ??/////////////////
     if (!(m_status & S_SRW)) {
       m_status |= S_ERR;
       return false;
@@ -411,7 +405,8 @@ bool StdioStream::fillBuf() {
 //------------------------------------------------------------------------------
 // private
 bool StdioStream::flushBuf() {
-  if (!(m_status & S_SWR)) {
+  if (!(m_status &
+        S_SWR)) {  // check for S_ERR ??////////////////////////
     if (!(m_status & S_SRW)) {
       m_status |= S_ERR;
       return false;
@@ -439,4 +434,18 @@ int StdioStream::flushPut(uint8_t c) {
   }
   m_w--;
   return *m_p++ = c;
+}
+//------------------------------------------------------------------------------
+char* StdioStream::fmtSpace(uint8_t len) {
+  if (m_w < len) {
+    if (!flushBuf() || m_w < len) {
+      return 0;
+    }
+  }
+  if (len > m_w) {
+    return 0;
+  }
+  m_p += len;
+  m_w -= len;
+  return reinterpret_cast<char*>(m_p);
 }

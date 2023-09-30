@@ -28,9 +28,8 @@
  */
 #ifndef SysCall_h
 #define SysCall_h
-#include <stddef.h>
 #include <stdint.h>
-
+#include <stddef.h>
 #include "../SdFatConfig.h"
 #if __cplusplus < 201103
 #warning nullptr defined

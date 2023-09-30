@@ -22,7 +22,6 @@
 #ifdef __AVR__
 #include <SPI.h>
 #include "SdFat.h"
-#include "sdios.h"
 #include "FreeStack.h"
 #include "AnalogBinLogger.h"
 //------------------------------------------------------------------------------
@@ -649,7 +648,7 @@ void logData() {
     bgnErase = endErase + 1;
   }
   // Start a multiple block write.
-  if (!sd.card()->writeStart(bgnBlock)) {
+  if (!sd.card()->writeStart(bgnBlock, FILE_BLOCK_COUNT)) {
     error("writeBegin failed");
   }
   // Write metadata.
